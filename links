@@ -1,0 +1,36 @@
+    @prefix : <http://www.w3.org/2000/01/rdf-schema#> .
+    @perfix Statu: <https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/> .
+    @prefix dc: <http://purl.org/dc/elements/1.1/> .
+    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+    @prefix link: <http://pdsinterop.org/solid-link-metadata/links> .
+
+    <>      dc:title "Link forwarding and caching ontology";
+        :comment """Defines basic link redirect and deleted properties, as well as
+    some properties to support archived/cached links and hashes and/or timestamps.""" .
+
+    link:RedirectPermanent  a rdf:Property;
+        :comment "This link has been moved here permanently.";
+        :seeAlso Statu:308 .
+
+    link:RedirectTemporarily a rdf:Property;
+        :comment "This link has been moved here temporarily.";
+        :seeAlso Statu:307 .
+
+    link:Deleted a rdf:Property;
+        :comment "This link has been deleted.";
+        :seeAlso Statu:404 .
+
+    link:Forget a rdf:Property;
+        :comment "This link should be forgotten.";
+        :seeAlso Statu:410 .
+
+    link:ContentHash a rdf:Literal;
+        :comment "This is the content hash of this link.";
+        :seeAlso <https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity> .
+
+    link:Archive a rdf:Property;
+        :comment "This link is archived here." .
+
+    link:ArchiveDate a rdf:Property;
+        :comment "This Archive was created at this timestamp." .
+
