@@ -1,36 +1,67 @@
-    @prefix : <http://www.w3.org/2000/01/rdf-schema#> .
-    @perfix Statu: <https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/> .
-    @prefix dc: <http://purl.org/dc/elements/1.1/> .
-    @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-    @prefix link: <http://pdsinterop.org/solid-link-metadata/links> .
+@prefix : <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix Statu: <https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix terms: <http://purl.org/dc/terms> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix link: <https://www.w3.org/ns/iana/link-relations/relation#> .
+@prefix reg: <https://www.w3.org/ns/assignments/reg#> .
+@prefix html: <https://datatracker.ietf.org/doc/html/> .
+@prefix ldpl: <./> .
 
-    <>      dc:title "Link forwarding and caching ontology";
-        :comment """Defines basic link redirect and deleted properties, as well as
-    some properties to support archived/cached links and hashes and/or timestamps.""" .
+<>  terms:description "Metadata terms describing link forwarding and caching";
+    link:canonical <https://purl.org/pdsinterop/link-metadata>;
+    :comment """Defines basic link redirect and deleted properties, as well as
+some properties to support archived/cached links and hashes and/or timestamps.""" .
 
-    link:RedirectPermanent  a rdf:Property;
-        :comment "This link has been moved here permanently.";
-        :seeAlso Statu:308 .
+<#redirectPermanent>  a rdf:Property;
+    :comment "This link has been moved here permanently.";
+    :definedBy ldpl:link-metadata;
+    reg:spec [
+        reg:xref html:rfc7238 ];
+    :seeAlso Statu:308 .
 
-    link:RedirectTemporarily a rdf:Property;
-        :comment "This link has been moved here temporarily.";
-        :seeAlso Statu:307 .
+<#redirectTemporary> a rdf:Property;
+    :comment "This link has been moved here temporarily.";
+    :definedBy ldpl:link-metadata;
+    reg:spec [
+        reg:xref html:rfc7231#section-6.4.7 ];
+    :seeAlso Statu:307 .
 
-    link:Deleted a rdf:Property;
-        :comment "This link has been deleted.";
-        :seeAlso Statu:404 .
+<#deleted> a rdf:Property;
+    :definedBy ldpl:link-metadata;
+    :comment "This link has been deleted.";
+    :seeAlso Statu:404 .
 
-    link:Forget a rdf:Property;
-        :comment "This link should be forgotten.";
-        :seeAlso Statu:410 .
+<#forget> a rdf:Property;
+    :definedBy ldpl:link-metadata;
+    :comment "This link should be forgotten.";
+    reg:spec [
+        reg:xref html:rfc7231#section-6.5.9 ];
+    :seeAlso Statu:410 .
 
-    link:ContentHash a rdf:Literal;
-        :comment "This is the content hash of this link.";
-        :seeAlso <https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity> .
+<#contentHash> a rdf:Literal;
+    :definedBy ldpl:link-metadata;
+    :comment "This is the content hash of this link.";
+    :seeAlso <https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity> .
 
-    link:Archive a rdf:Property;
-        :comment "This link is archived here." .
+<#archive> a rdf:Property;
+    :definedBy ldpl:link-metadata;
+    :comment "This link is archived here." .
 
-    link:ArchiveDate a rdf:Property;
-        :comment "This Archive was created at this timestamp." .
+<#archiveDate> a rdf:Property;
+    :definedBy ldpl:link-metadata;
+    :comment "This Archive was created at this timestamp." .
 
+<#link-metadata> terms:title "Link Metadata";
+    reg:id "link-metadata";
+    reg:registry <#link-metadata-1> .
+
+<#link-metadata-1> terms:title "Link Metadata Types"
+    reg:id "link-metadata-1";
+    reg:record <#redirectPermanent>,
+            <#redirectTemporary>,
+            <#deleted>,
+            <#forger>,
+            <#contentHash>,
+            <#archive>,
+            <#archiveDate> .
