@@ -83,7 +83,18 @@ You may add multiple archive links to a resource. And there is no requirement to
 
 ### Content Hash
 
+```turtle
+@prefix ldpl: <https://purl.org/pdsinterop/link-metadata#> .
 
+<http://www.muze.nl/>
+	lpdl:archive <https://web.archive.org/web/20000605230138/http://www.muze.nl/> .
+
+<https://web.archive.org/web/20000605230138/http://www.muze.nl/>
+	lpdl:archiveDate "2000-06-05T23:01:38"
+	lpdl:contentHash "sha384-oqVuAfXRKap7fdgcCY5uykM6+R9GqQ8K/uxy9rx7HNQlGYl1kPzQho1wx4JwY8wC" .
+```
+
+The contentHash term allows you to add a [resource integrity check](https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity) to an archive or other link. The application fetching the resource can then check if the returned resource has been altered in any way.
 
 ## More Complex Redirect Scenario's
 
