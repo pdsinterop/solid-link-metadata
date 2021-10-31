@@ -1,7 +1,7 @@
 # solid-link-metadata
 Adds link forwarding and archive/cache information to a URL
 
-This repository contains both a [link metadata ontology](links) and a specification on how to use it in a [solid](https://solidproject.org/) application or server.
+This repository contains both a [link metadata ontology](links.ttl) and a specification on how to use it in a [solid](https://solidproject.org/) application or server.
 
 ## Why
 
