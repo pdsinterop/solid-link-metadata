@@ -37,7 +37,7 @@ By adding the ability to add redirect information inside a resource, for entitie
 <#entity> ldpl:redirectPermanent </anotherResource#entity> .
 ```
 
-Another example, the dutch institution that develops curricula for elementary and secondary education, slo.nl, has made all the curricula data available as linked open data at https://opendata.slo.nl/. One of the design features of all entities is that they are immutable. If a property of an existing entity changes, that entity is deprecated and a new entity with the new property value is created, with a new identity url. The old entity has a property 'replacedBy' that points to the new entity. With this link metadata ontology, this can now be stated in a standard compliant way that any Solid application can understand, as a ldpl:redirectPermanent statement.
+Another example, the Dutch institution that develops curricula for elementary and secondary education, slo.nl, has made all the curricula data available as linked open data at https://opendata.slo.nl/. One of the design features of all entities is that they are immutable. If a property of an existing entity changes, that entity is deprecated and a new entity with the new property value is created, with a new identity url. The old entity has a property 'replacedBy' that points to the new entity. With this link metadata ontology, this can now be stated in a standard compliant way that any Solid application can understand, as a ldpl:redirectPermanent statement.
 
 ## Usage Examples
 
@@ -113,7 +113,7 @@ This term adds an archive link to a resource link.
 	lpdl:archiveDate "2000-06-05T23:01:38" .
 ```
 
-The arciveDate term is applied to the archive link. The third part must be an ISO 8601 compliant datetime string, but may choose to just supply the date, without a time.
+The archiveDate term is applied to the archive link. The third part must be an ISO 8601 compliant datetime string, but may choose to just supply the date, without a time.
 
 You may add multiple archive links to a resource. And there is no requirement to also add an archiveDate for each archive, but it is strongly advised to do so.
 
@@ -136,9 +136,9 @@ The contentHash term allows you to add a [resource integrity check](https://deve
 
 ### Permanent Redirect to a Forget Link
 
-In this scenario an application reads a resource that contains a link to location A. Requesting this link returns a permanent redirect to location B, either through the HTTP 308 header, or in the data using the link-metadata ontology. Requesting location B returns a 410 Gone header, or in the dataset has the link-metadata:forget triple.
+In this scenario an application reads a resource that contains a link to location A. Requesting this link returns a permanent redirect to location B, either through the HTTP 308 header, or in the data using the link-metadata ontology. Requesting location B returns a 410 Gone header, or the dataset has the link-metadata:forget triple.
 
-The correct response for the application is to remove the original link to location A, if possible. Since this link is permanently redirected, it should be updated. However the new location sends the instruction to forget that new link. This means that the instruction to forget location B should also be applied to location A.
+The correct response for the application is to remove the original link to location A, if possible. Since this link is permanently redirected, it should be updated. However, the new location sends the instruction to forget that new link. This means that the instruction to forget location B should also be applied to location A.
 
 ### Temporary Redirect to a Forget Link
 
@@ -162,4 +162,4 @@ local:Bob_Harley
 	ldpl:redirectPermanent dbr:Harley_Davidson .
 ```
 
-It is up to the application on how to process this information. One way is to ask the user which of these links is the correct one to follow.
+It is up to the application how to process this information. One way is to ask the user which of these links is the correct one to follow.
