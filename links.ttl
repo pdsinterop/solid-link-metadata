@@ -3,7 +3,6 @@
 @prefix hsc: <https://www.w3.org/2011/http-statusCodes#> .
 @prefix html: <https://datatracker.ietf.org/doc/html/> .
 @prefix link: <https://www.w3.org/ns/iana/link-relations/relation#> .
-@prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix reg: <https://www.w3.org/ns/assignments/reg#> .
@@ -29,28 +28,25 @@ some properties to support archived/cached links and hashes and/or timestamps.""
     rdfs:seeAlso Statu:308 .
 
 <#redirectTemporary> a rdf:Property;
-    owl:sameAs <hsc:TemporaryRedirect>;
     rdfs:comment "This link has been moved here temporarily.";
     rdfs:isDefinedBy :link-metadata;
     reg:spec [
         reg:xref html:rfc7231#section-6.4.7
     ];
-    rdfs:seeAlso Statu:307 .
+    rdfs:seeAlso hsc:TemporaryRedirect, Statu:307 .
 
 <#deleted> a rdf:Property;
-    owl:sameAs <hsc:NotFound>;
     rdfs:isDefinedBy :link-metadata;
     rdfs:comment "This link has been deleted.";
-    rdfs:seeAlso Statu:404 .
+    rdfs:seeAlso hsc:NotFound, Statu:404 .
 
 <#forget> a rdf:Property;
-    owl:sameAs <hsc:Gone>;
     rdfs:isDefinedBy :link-metadata;
     rdfs:comment "This link should be forgotten.";
     reg:spec [
         reg:xref html:rfc7231#section-6.5.9
     ];
-    rdfs:seeAlso Statu:410 .
+    rdfs:seeAlso hsc:Gone, Statu:410 .
 
 <#contentHash> a rdfs:Literal;
     rdfs:isDefinedBy :link-metadata;
