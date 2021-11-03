@@ -42,8 +42,8 @@ some properties to support archived/cached links and hashes and/or timestamps.""
     ];
     rdfs:seeAlso Statu:410 .
 
-<#contentHash> a rdf:Literal;
-    rdfs:isDefinedBy ldpl:link-metadata;
+<#contentHash> a rdfs:Literal;
+    rdfs:isDefinedBy :link-metadata;
     rdfs:comment "This is the content hash of this link.";
     rdfs:seeAlso <https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity> .
 
