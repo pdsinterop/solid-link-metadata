@@ -6,7 +6,7 @@
 @prefix link: <https://www.w3.org/ns/iana/link-relations/relation#> .
 @prefix reg: <https://www.w3.org/ns/assignments/reg#> .
 @prefix html: <https://datatracker.ietf.org/doc/html/> .
-@prefix ldpl: <./> .
+@prefix : <./> .
 
 <>  terms:description "Metadata terms describing link forwarding and caching";
     link:canonical <https://purl.org/pdsinterop/link-metadata>;
@@ -15,7 +15,7 @@ some properties to support archived/cached links and hashes and/or timestamps.""
 
 <#redirectPermanent> a rdf:Property;
     rdfs:comment "This link has been moved here permanently.";
-    rdfs:isDefinedBy ldpl:link-metadata;
+    rdfs:isDefinedBy :link-metadata;
     reg:spec [
         reg:xref html:rfc7238
     ];
@@ -23,19 +23,19 @@ some properties to support archived/cached links and hashes and/or timestamps.""
 
 <#redirectTemporary> a rdf:Property;
     rdfs:comment "This link has been moved here temporarily.";
-    rdfs:isDefinedBy ldpl:link-metadata;
+    rdfs:isDefinedBy :link-metadata;
     reg:spec [
         reg:xref html:rfc7231#section-6.4.7
     ];
     rdfs:seeAlso Statu:307 .
 
 <#deleted> a rdf:Property;
-    rdfs:isDefinedBy ldpl:link-metadata;
+    rdfs:isDefinedBy :link-metadata;
     rdfs:comment "This link has been deleted.";
     rdfs:seeAlso Statu:404 .
 
 <#forget> a rdf:Property;
-    rdfs:isDefinedBy ldpl:link-metadata;
+    rdfs:isDefinedBy :link-metadata;
     rdfs:comment "This link should be forgotten.";
     reg:spec [
         reg:xref html:rfc7231#section-6.5.9
@@ -48,11 +48,11 @@ some properties to support archived/cached links and hashes and/or timestamps.""
     rdfs:seeAlso <https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity> .
 
 <#archive> a rdf:Property;
-    rdfs:isDefinedBy ldpl:link-metadata;
+    rdfs:isDefinedBy :link-metadata;
     rdfs:comment "This link is archived here." .
 
 <#archiveDate> a rdf:Property;
-    rdfs:isDefinedBy ldpl:link-metadata;
+    rdfs:isDefinedBy :link-metadata;
     rdfs:comment "This Archive was created at this timestamp." .
 
 <#link-metadata> terms:title "Link Metadata";
