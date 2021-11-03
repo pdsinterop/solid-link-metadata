@@ -1,5 +1,6 @@
 @prefix : <./> .
 @prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix hsc: <https://www.w3.org/2011/http-statusCodes#> .
 @prefix html: <https://datatracker.ietf.org/doc/html/> .
 @prefix link: <https://www.w3.org/ns/iana/link-relations/relation#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
@@ -7,11 +8,16 @@
 @prefix reg: <https://www.w3.org/ns/assignments/reg#> .
 @prefix Statu: <https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/> .
 @prefix terms: <http://purl.org/dc/terms#> .
+@prefix vann: <https://vocab.org/vann/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<>  terms:description "Metadata terms describing link forwarding and caching";
+<>
     link:canonical <https://purl.org/pdsinterop/link-metadata>;
     rdfs:comment """Defines basic link redirect and deleted properties, as well as
-some properties to support archived/cached links and hashes and/or timestamps.""" .
+some properties to support archived/cached links and hashes and/or timestamps.""";
+    terms:description "Metadata terms describing link forwarding and caching";
+    vann:preferredNamespacePrefix "ldpl" ;
+    vann:preferredNamespaceUri "https://purl.org/pdsinterop/link-metadata#"^^xsd:anyURI .
 
 <#redirectPermanent> a rdf:Property;
     rdfs:comment "This link has been moved here permanently.";
@@ -27,12 +33,12 @@ some properties to support archived/cached links and hashes and/or timestamps.""
     reg:spec [
         reg:xref html:rfc7231#section-6.4.7
     ];
-    rdfs:seeAlso Statu:307 .
+    rdfs:seeAlso hsc:TemporaryRedirect, Statu:307 .
 
 <#deleted> a rdf:Property;
     rdfs:isDefinedBy :link-metadata;
     rdfs:comment "This link has been deleted.";
-    rdfs:seeAlso Statu:404 .
+    rdfs:seeAlso hsc:NotFound, Statu:404 .
 
 <#forget> a rdf:Property;
     rdfs:isDefinedBy :link-metadata;
@@ -40,7 +46,7 @@ some properties to support archived/cached links and hashes and/or timestamps.""
     reg:spec [
         reg:xref html:rfc7231#section-6.5.9
     ];
-    rdfs:seeAlso Statu:410 .
+    rdfs:seeAlso hsc:Gone, Statu:410 .
 
 <#contentHash> a rdfs:Literal;
     rdfs:isDefinedBy :link-metadata;
