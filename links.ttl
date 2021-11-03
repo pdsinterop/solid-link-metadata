@@ -15,41 +15,41 @@ some properties to support archived/cached links and hashes and/or timestamps.""
 
 <#redirectPermanent> a rdf:Property;
     rdfs:comment "This link has been moved here permanently.";
-    rdfs:definedBy ldpl:link-metadata;
+    rdfs:isDefinedBy ldpl:link-metadata;
     reg:spec [
         reg:xref html:rfc7238 ];
     rdfs:seeAlso Statu:308 .
 
 <#redirectTemporary> a rdf:Property;
     rdfs:comment "This link has been moved here temporarily.";
-    rdfs:definedBy ldpl:link-metadata;
+    rdfs:isDefinedBy ldpl:link-metadata;
     reg:spec [
         reg:xref html:rfc7231#section-6.4.7 ];
     rdfs:seeAlso Statu:307 .
 
 <#deleted> a rdf:Property;
-    rdfs:definedBy ldpl:link-metadata;
+    rdfs:isDefinedBy ldpl:link-metadata;
     rdfs:comment "This link has been deleted.";
     rdfs:seeAlso Statu:404 .
 
 <#forget> a rdf:Property;
-    rdfs:definedBy ldpl:link-metadata;
+    rdfs:isDefinedBy ldpl:link-metadata;
     rdfs:comment "This link should be forgotten.";
     reg:spec [
         reg:xref html:rfc7231#section-6.5.9 ];
     rdfs:seeAlso Statu:410 .
 
 <#contentHash> a rdf:Literal;
-    rdfs:definedBy ldpl:link-metadata;
+    rdfs:isDefinedBy ldpl:link-metadata;
     rdfs:comment "This is the content hash of this link.";
     rdfs:seeAlso <https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity> .
 
 <#archive> a rdf:Property;
-    rdfs:definedBy ldpl:link-metadata;
+    rdfs:isDefinedBy ldpl:link-metadata;
     rdfs:comment "This link is archived here." .
 
 <#archiveDate> a rdf:Property;
-    rdfs:definedBy ldpl:link-metadata;
+    rdfs:isDefinedBy ldpl:link-metadata;
     rdfs:comment "This Archive was created at this timestamp." .
 
 <#link-metadata> terms:title "Link Metadata";
