@@ -1,5 +1,6 @@
 @prefix : <./> .
 @prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix hsc: <https://www.w3.org/2011/http-statusCodes#> .
 @prefix html: <https://datatracker.ietf.org/doc/html/> .
 @prefix link: <https://www.w3.org/ns/iana/link-relations/relation#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
@@ -7,7 +8,6 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix reg: <https://www.w3.org/ns/assignments/reg#> .
 @prefix Statu: <https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/> .
-@prefix status: <https://www.w3.org/2011/http-statusCodes#> .
 @prefix terms: <http://purl.org/dc/terms#> .
 @prefix vann: <https://vocab.org/vann/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -29,7 +29,7 @@ some properties to support archived/cached links and hashes and/or timestamps.""
     rdfs:seeAlso Statu:308 .
 
 <#redirectTemporary> a rdf:Property;
-    owl:sameAs <status:TemporaryRedirect>;
+    owl:sameAs <hsc:TemporaryRedirect>;
     rdfs:comment "This link has been moved here temporarily.";
     rdfs:isDefinedBy :link-metadata;
     reg:spec [
@@ -38,13 +38,13 @@ some properties to support archived/cached links and hashes and/or timestamps.""
     rdfs:seeAlso Statu:307 .
 
 <#deleted> a rdf:Property;
-    owl:sameAs <status:NotFound>;
+    owl:sameAs <hsc:NotFound>;
     rdfs:isDefinedBy :link-metadata;
     rdfs:comment "This link has been deleted.";
     rdfs:seeAlso Statu:404 .
 
 <#forget> a rdf:Property;
-    owl:sameAs <status:Gone>;
+    owl:sameAs <hsc:Gone>;
     rdfs:isDefinedBy :link-metadata;
     rdfs:comment "This link should be forgotten.";
     reg:spec [
