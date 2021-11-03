@@ -2,16 +2,23 @@
 @prefix dc: <http://purl.org/dc/elements/1.1/> .
 @prefix html: <https://datatracker.ietf.org/doc/html/> .
 @prefix link: <https://www.w3.org/ns/iana/link-relations/relation#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix reg: <https://www.w3.org/ns/assignments/reg#> .
 @prefix Statu: <https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/> .
+@prefix status: <https://www.w3.org/2011/http-statusCodes#> .
 @prefix terms: <http://purl.org/dc/terms#> .
+@prefix vann: <https://vocab.org/vann/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<>  terms:description "Metadata terms describing link forwarding and caching";
+<>
     link:canonical <https://purl.org/pdsinterop/link-metadata>;
     rdfs:comment """Defines basic link redirect and deleted properties, as well as
-some properties to support archived/cached links and hashes and/or timestamps.""" .
+some properties to support archived/cached links and hashes and/or timestamps.""";
+    terms:description "Metadata terms describing link forwarding and caching";
+    vann:preferredNamespacePrefix "ldpl" ;
+    vann:preferredNamespaceUri "https://purl.org/pdsinterop/link-metadata#"^^xsd:anyURI .
 
 <#redirectPermanent> a rdf:Property;
     rdfs:comment "This link has been moved here permanently.";
@@ -22,6 +29,7 @@ some properties to support archived/cached links and hashes and/or timestamps.""
     rdfs:seeAlso Statu:308 .
 
 <#redirectTemporary> a rdf:Property;
+    owl:sameAs <status:TemporaryRedirect>;
     rdfs:comment "This link has been moved here temporarily.";
     rdfs:isDefinedBy :link-metadata;
     reg:spec [
@@ -30,11 +38,13 @@ some properties to support archived/cached links and hashes and/or timestamps.""
     rdfs:seeAlso Statu:307 .
 
 <#deleted> a rdf:Property;
+    owl:sameAs <status:NotFound>;
     rdfs:isDefinedBy :link-metadata;
     rdfs:comment "This link has been deleted.";
     rdfs:seeAlso Statu:404 .
 
 <#forget> a rdf:Property;
+    owl:sameAs <status:Gone>;
     rdfs:isDefinedBy :link-metadata;
     rdfs:comment "This link should be forgotten.";
     reg:spec [
