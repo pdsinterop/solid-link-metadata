@@ -32,12 +32,12 @@ The problem is that if you start out like this, at some point it becomes necessa
 By adding the ability to add redirect information inside a resource, for entities in the resource, this problem can be tackled. The external link can be resolved and even automatically updated, if you add a breadcrumb trail to the original resource. e.g.:
 
 ```turtle
-@prefix ldpl: <https://purl.org/pdsinterop/link-metadata#> .
+@prefix lm: <https://purl.org/pdsinterop/link-metadata#> .
 
-<#entity> ldpl:redirectPermanent </anotherResource#entity> .
+<#entity> lm:redirectPermanent </anotherResource#entity> .
 ```
 
-Another example, the Dutch institution that develops curricula for elementary and secondary education, slo.nl, has made all the curricula data available as linked open data at https://opendata.slo.nl/. One of the design features of all entities is that they are immutable. If a property of an existing entity changes, that entity is deprecated and a new entity with the new property value is created, with a new identity url. The old entity has a property 'replacedBy' that points to the new entity. With this link metadata ontology, this can now be stated in a standard compliant way that any Solid application can understand, as a ldpl:redirectPermanent statement.
+Another example, the Dutch institution that develops curricula for elementary and secondary education, slo.nl, has made all the curricula data available as linked open data at https://opendata.slo.nl/. One of the design features of all entities is that they are immutable. If a property of an existing entity changes, that entity is deprecated and a new entity with the new property value is created, with a new identity url. The old entity has a property 'replacedBy' that points to the new entity. With this link metadata ontology, this can now be stated in a standard compliant way that any Solid application can understand, as a lm:redirectPermanent statement.
 
 ## Usage Examples
 
@@ -45,12 +45,12 @@ Another example, the Dutch institution that develops curricula for elementary an
 
 Redirecting a local resource permanently to a new URL, turtle format:
 ```turtle
-@prefix ldpl: <https://purl.org/pdsinterop/link-metadata#> .
+@prefix lm: <https://purl.org/pdsinterop/link-metadata#> .
 @prefix dbr: <http://dbpedia.org/resource/> .
 @prefix local: <./> .
 
 local:Bob_Marley
-	ldpl:redirectPermanent dbr:Bob_Marley .
+	lm:redirectPermanent dbr:Bob_Marley .
 ```
 
 If you upload this turtle file as http://www.example.com/.meta, supposing that it is a solid data pod, the server should interpret this file so that a subsequent request for http://www.example.com/Bob_Marley will result in a permanent redirect response, like this:
@@ -67,25 +67,25 @@ A Solid application getting this response should update the link to the new URL,
 This is very similar to the permanent redirect, but doesn't imply the requesting application should update the originating link.
 
 ```turtle
-@prefix ldpl: <https://purl.org/pdsinterop/link-metadata#> .
+@prefix lm: <https://purl.org/pdsinterop/link-metadata#> .
 @prefix dbr: <http://dbpedia.org/resource/> .
 @prefix local: <./> .
 
 local:Bob_Marley
-	ldpl:redirectTemporary dbr:Bob_Marley .
+	lm:redirectTemporary dbr:Bob_Marley .
 ```
 
-### Forget a resource (Deleted)
+### Forget a resource
 
 This term is specifically meant to implement the GDPR right to be forgotten. If you sent a .meta file like this:
 
 ```turtle
-@prefix ldpl: <https://purl.org/pdsinterop/link-metadata#> .
+@prefix lm: <https://purl.org/pdsinterop/link-metadata#> .
 @prefix dbr: <http://dbpedia.org/resource/> .
 @prefix local: <./> .
 
 local:Bob_Harley
-	ldpl:forget "This was a typo, it should never have been here" .
+	lm:forget "This was a typo, it should never have been here" .
 ```
 
 The third part of this triple is the reason for the instruction to forget this link. This may be empty. If uploaded to a solid server that supports it, the server will then respond to later requests for ./Bob_Harly with:
@@ -95,42 +95,49 @@ HTTP/1.1 410 Gone
 X-LPDL-Forget: This was a typo, it should never have been here
 ```
 
-### Not found
+### Deleted
 
-There is no reason to explicitly add this instruction to a .meta file or other data, but is defined here just to be complete.
+This term is here so you can place a tombstone marker in a linked data set. There are numerous usecases for tombstones. One of these is to create an un-delete functionality. If you simply add a 'deleted' predicate to a subject, you can remove it from the normal dataset as rendered in a user interface, or in search results. But you can still recover 'deleted' entities, untill you actually remove them.
+
+Another usecase is in distributed datasets, which at some point may need to be merged. By adding a 'deleted' marker for a subject, the intent of the user is preserved and the entity may be removed from all distributed sets later on.
+
 
 ### Archive and ArchiveDate 
 
 This term adds an archive link to a resource link.
 
 ```turtle
-@prefix ldpl: <https://purl.org/pdsinterop/link-metadata#> .
+@prefix lm: <https://purl.org/pdsinterop/link-metadata#> .
 
 <http://www.muze.nl/>
-	lpdl:archive <https://web.archive.org/web/20000605230138/http://www.muze.nl/> .
+	lm:archive <https://web.archive.org/web/20000605230138/http://www.muze.nl/> .
 
 <https://web.archive.org/web/20000605230138/http://www.muze.nl/>
-	lpdl:archiveDate "2000-06-05T23:01:38" .
+	lm:archiveDate "2000-06-05T23:01:38" .
 ```
 
 The archiveDate term is applied to the archive link. The third part must be an ISO 8601 compliant datetime string, but may choose to just supply the date, without a time.
 
 You may add multiple archive links to a resource. And there is no requirement to also add an archiveDate for each archive, but it is strongly advised to do so.
 
+The reason for adding a new predicate for the archive date instead of using something like dcterms:created, is that this way the semantics of the date are more clear. There is no possible confustion about the meaning of lm:archiveDate, it specifically means 'when this archive copy was created'. If we use 'dcterms:created', you might infer it means when the original dataset was created, instead of just this archive copy.
+
 ### Content Hash
 
 ```turtle
-@prefix ldpl: <https://purl.org/pdsinterop/link-metadata#> .
+@prefix lm: <https://purl.org/pdsinterop/link-metadata#> .
 
 <http://www.muze.nl/>
-	lpdl:archive <https://web.archive.org/web/20000605230138/http://www.muze.nl/> .
+	lm:archive <https://web.archive.org/web/20000605230138/http://www.muze.nl/> .
 
 <https://web.archive.org/web/20000605230138/http://www.muze.nl/>
-	lpdl:archiveDate "2000-06-05T23:01:38"
-	lpdl:contentHash "sha384-oqVuAfXRKap7fdgcCY5uykM6+R9GqQ8K/uxy9rx7HNQlGYl1kPzQho1wx4JwY8wC" .
+	lm:archiveDate "2000-06-05T23:01:38"
+	lm:contentHash "sha384-oqVuAfXRKap7fdgcCY5uykM6+R9GqQ8K/uxy9rx7HNQlGYl1kPzQho1wx4JwY8wC" .
 ```
 
 The contentHash term allows you to add a [resource integrity check](https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity) to an archive or other link. The application fetching the resource can then check if the returned resource has been altered in any way.
+
+There has been some discussion about implementing content hashes, since RDF data can be represented in many different formats. Most servers have the ability to serve the same resource in different formats, based on content negotiation (accept headers). So you cannot reliably use a hash on the raw content. However there has been some progress on creating a hashing algorithm on the parsed graph, as represented in memory. This is independant of the specific representation format used. See for emaple ["Hashing of RDF Graphs and a Solution to the Blank Node Problem - Edzard H&ouml;fix and Ina Schieferdeckeer"](http://ceur-ws.org/Vol-1259/method2014_submission_1.pdf).
 
 ## More Complex Redirect Scenario's
 
@@ -153,13 +160,13 @@ In this scenario the original link returns a temporary redirect instruction. The
 We found that it is possible that a single entity or resource is split into multiple new resources. The correct way to describe this is to add multiple redirect statements to a single entity, e.g.:
 
 ```turtle
-@prefix ldpl: <https://purl.org/pdsinterop/link-metadata#> .
+@prefix lm: <https://purl.org/pdsinterop/link-metadata#> .
 @prefix dbr: <http://dbpedia.org/resource/> .
 @prefix local: <./> .
 
 local:Bob_Harley
-	ldpl:redirectPermanent dbr:Bob_Marley,
-	ldpl:redirectPermanent dbr:Harley_Davidson .
+	lm:redirectPermanent dbr:Bob_Marley,
+	lm:redirectPermanent dbr:Harley_Davidson .
 ```
 
 It is up to the application how to process this information. One way is to ask the user which of these links is the correct one to follow.
