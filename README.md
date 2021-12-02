@@ -170,3 +170,61 @@ local:Bob_Harley
 ```
 
 It is up to the application how to process this information. One way is to ask the user which of these links is the correct one to follow.
+
+## Trust and ambiguity
+
+### URL based intrinsic trust
+
+Any resource can specify any link metadata predicate for itself and for any subresource. These will be intrinsicly trusted. A subresource is defined as any resource who's URL can be written as a relative URL to the originating resource, without the need for `../`.
+
+### Examples
+
+`https://pod.example.org/foo/` 
+
+can specify:
+
+`&lt;/foo/bar&lt; lm:redirectPermanent &lt;/bar/foo/&gt;`
+
+or even:
+
+`&lt;/foo&lt; lm:redirectPermanent &lt;/bar/&gt;`
+
+it cannot specify:
+
+`&lt;/&lt; lm:redirectPermanent &lt;/bar/&gt;`
+
+or:
+
+`&lt;https://solidcommunity.net/foo&lt; lm:redirectPermanent &lt;/bar/&gt;`
+
+
+### User supplied explicit trust
+
+A Solid user can specify that a specific resource is trusted. In that case this resource may specify link metadata predicates for any other resource, whether these are subresources or not.
+
+How the user specifies this is out of scope for this specification.
+
+### Server implementation details
+
+If a server implements the link metadata instructions through the `.meta` file specification, then the server must follow the URL based trust system. It must ignore any link metadata predicates that do not describe a subresource. 
+
+It must also ignore link metadata predicates for the resource itself. For example, in `https://pod.example.org/` there is a resource named `foo`. If a user adds a `foo.meta` and in it adds a redirect predicate for the resource `https://pod.example.org/foo`, the server must ignore this.
+
+Technically the server could handle this and send HTTP redirect headers whenever you request `foo`, but now there is no obvious way to alter the `.meta` information for `foo`. 
+
+You could add the LINK header in the http redirect response, with the LINK header pointing to `foo.meta`, but the redirect URL may also have a `.meta` resource. Now it is unclear which information should be trusted, if there is a conflict.
+
+It also makes it unnecessarily complex to create a user interface that allows you to access and edit the `foo.meta` file, since `foo` itself is redirected.
+
+### Ambiguity
+
+Whenever a resource has a link metadata predicate for a specific entity, any other predicates for that same entity should be ignored.
+
+For example, say you delete a subject (entity) from a resource, and the application that you use, applies the lm:deleted predicate to it. This means that the subject no longer exists and any other predicates on it should also be ignored. Now if you 'undelete' the subject, all the application has to do is remove the lm:deleted predicate and all the information is back.
+
+This should also work for redirect information. If you set a redirect (temporary or permanent) predicate on a subject, applications should only allow you to alter or remove those predicates. Any other predicates here are no longer valid and should no longer be used.
+
+The reasoning here is that the redirect or deleted predicates explicitly invalidate the current subject URL. If this wasn't the case the exact information about the subject becomes ambiguous. If URL &lt;A> specifies &lt;A> `foaf:knows` &lt;B>, and &lt;A> `lm:redirectTemporary` &lt;C>. And URL &lt;C> specifies &lt;C> `foaf:knows` &lt;D>. Does this mean that &lt;A> knows &lt;B>,&lt;C>? Then you could no longer remove the `foaf:knows` &lt;B> information, there is no 'undo' option. 
+
+So only by ignoring all other predicates linked to &lt;A> can we completely redefine the knowledge in &lt;C>.
+
