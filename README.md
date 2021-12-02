@@ -183,20 +183,27 @@ Any resource can specify any link metadata predicate for itself and for any subr
 
 can specify:
 
-`&lt;/foo/bar&lt; lm:redirectPermanent &lt;/bar/foo/&gt;`
+```turtle
+</foo/bar> lm:redirectPermanent </bar/foo/>
+```
 
 or even:
 
-`&lt;/foo&lt; lm:redirectPermanent &lt;/bar/&gt;`
+```turtle
+</foo> lm:redirectPermanent </bar/>
+```
 
 it cannot specify:
 
-`&lt;/&lt; lm:redirectPermanent &lt;/bar/&gt;`
+```turtle
+</> lm:redirectPermanent </bar/>
+```
 
 or:
 
-`&lt;https://solidcommunity.net/foo&lt; lm:redirectPermanent &lt;/bar/&gt;`
-
+```turtle
+<https://solidcommunity.net/foo> lm:redirectPermanent </bar/>
+```
 
 ### User supplied explicit trust
 
