@@ -77,7 +77,7 @@ some properties to support archived/cached links and hashes and/or timestamps.""
     reg:record <#redirectPermanent>,
             <#redirectTemporary>,
             <#deleted>,
-            <#forger>,
+            <#forget>,
             <#contentHash>,
             <#archive>,
             <#archiveDate> .
