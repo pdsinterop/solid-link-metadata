@@ -75,6 +75,13 @@ local:Bob_Marley
 	lm:redirectTemporary dbr:Bob_Marley .
 ```
 
+If you upload this turtle file as http://www.example.com/.meta, supposing that it is a solid data pod, the server should interpret this file so that a subsequent request for http://www.example.com/Bob_Marley will result in a temporary redirect response, like this:
+
+```http
+HTTP/1.1 307 Temporary Redirect
+Location: http://dbpedia.org/resource/Bob_Marley
+```
+
 ### Forget a resource
 
 This term is specifically meant to implement the GDPR right to be forgotten. If you sent a .meta file like this:
@@ -213,7 +220,7 @@ How the user specifies such trust is out of scope for this specification.
 
 If a server implements Auxiliary Resources of type "Description Resource" (colloquially known as `.meta` files), then the server must follow the URL based trust system. It must ignore any link metadata predicates that do not describe a subresource. 
 
-It must also ignore link metadata predicates for the resource itself. For example, in `https://pod.example.org/` there is a resource named `foo`. If a user adds a `foo.meta` and in it adds a redirect predicate for the resource `https://pod.example.org/foo`, the server must ignore this.
+It should also ignore link metadata predicates for the resource itself. For example, in `https://pod.example.org/` there is a resource named `foo`. If a user adds a `foo.meta` and in it adds a redirect predicate for the resource `https://pod.example.org/foo`, the server should ignore this.
 
 Technically the server could handle this and send HTTP redirect headers whenever you request `foo`, but now there is no obvious way to alter the `.meta` information for `foo`. 
 
@@ -238,4 +245,3 @@ The reasoning here is that the redirect or deleted predicates explicitly invalid
 Does this mean that &lt;A> knows &lt;B>,&lt;C>? Then you could no longer remove the `foaf:knows` &lt;B> information, there is no 'undo' option. 
 
 So only by ignoring all other predicates linked to &lt;A> can we completely redefine the knowledge in &lt;C>.
-
