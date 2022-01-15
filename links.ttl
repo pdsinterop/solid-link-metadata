@@ -19,7 +19,11 @@ some properties to support archived/cached links and hashes and/or timestamps.""
     vann:preferredNamespacePrefix "ldpl" ;
     vann:preferredNamespaceUri "https://purl.org/pdsinterop/link-metadata#"^^xsd:anyURI .
 
+<#invalidatedResource> a rdfs:Class;
+    rdfs:comment "This resource is no longer valid, disregard any other predicates for this subject" .
+
 <#redirectPermanent> a rdf:Property;
+    rdfs:domain :invalidatedResource;
     rdfs:comment "This link has been moved here permanently.";
     rdfs:isDefinedBy :link-metadata;
     reg:spec [
@@ -28,6 +32,7 @@ some properties to support archived/cached links and hashes and/or timestamps.""
     rdfs:seeAlso Statu:308 .
 
 <#redirectTemporary> a rdf:Property;
+    rdfs:domain :invalidatedResource;
     rdfs:comment "This link has been moved here temporarily.";
     rdfs:isDefinedBy :link-metadata;
     reg:spec [
@@ -36,11 +41,13 @@ some properties to support archived/cached links and hashes and/or timestamps.""
     rdfs:seeAlso hsc:TemporaryRedirect, Statu:307 .
 
 <#deleted> a rdf:Property;
+    rdfs:domain :invalidatedResource;
     rdfs:isDefinedBy :link-metadata;
     rdfs:comment "This link has been deleted.";
     rdfs:seeAlso hsc:NotFound, Statu:404 .
 
 <#forget> a rdf:Property;
+    rdfs:domain :invalidatedResource;
     rdfs:isDefinedBy :link-metadata;
     rdfs:comment "This link should be forgotten.";
     reg:spec [
@@ -70,7 +77,7 @@ some properties to support archived/cached links and hashes and/or timestamps.""
     reg:record <#redirectPermanent>,
             <#redirectTemporary>,
             <#deleted>,
-            <#forger>,
+            <#forget>,
             <#contentHash>,
             <#archive>,
             <#archiveDate> .
