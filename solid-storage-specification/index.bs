@@ -1,0 +1,33 @@
+<pre class='metadata'>
+Title: Solid-Storage-Link-Metadata
+Boilerplate: issues-index no
+Boilerplate: style-darkmode off
+Shortname: solid-storage-lm
+Level: 1
+Repository: https://github.com/pdsinterop/solid-link-metadata
+Markup Shorthands: markdown yes
+Max ToC Depth: 2
+Editor: [Auke van Slooten](https://github.com/poef) ([Muze](https://www.muze.nl/))
+Status: LD
+Abstract:
+  When linked data resources are moved to another location, the chain of
+  links is broken. Over time this will degrade the solid ecosystem. This
+  document aims to address this by building on top of current web standards,
+  to allow solid storage servers to be instructed to send redirect information.
+Status Text:
+  This section describes the status of this document at the time of its publication.
+
+  This document was published by the [PDS Interop Group](https://pdsinterop.org)
+  for review by the [Solid Commyinty Group](https://www.w3.org/community/solid/)
+  as a preliminary draft. There has been no review yet, and the information
+  in this document is subject to change. You are invited to
+  [contribute](https://github.com/pdsinterop/solid-link-metadata/issues) any
+  feedback, comments or questions you may have.
+</pre>
+
+# Introduction # {#intro}
+
+*This section is non-normative*
+
+## Out of Scope ## {##intro-out-of-scope}
+
