@@ -146,7 +146,7 @@ The reason for adding a new predicate for the archive date instead of using some
 
 The contentHash term allows you to add a [resource integrity check](https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity) to an archive or other link. The application fetching the resource can then check if the returned resource has been altered in any way.
 
-There has been some discussion about implementing content hashes, since RDF data can be represented in many different formats. Most servers have the ability to serve the same resource in different formats, based on content negotiation (accept headers). So you cannot reliably use a hash on the raw content. However there has been some progress on creating a hashing algorithm on the parsed graph, as represented in memory. This is independant of the specific representation format used. See for emaple ["Hashing of RDF Graphs and a Solution to the Blank Node Problem - Edzard H&ouml;fix and Ina Schieferdeckeer"](http://ceur-ws.org/Vol-1259/method2014_submission_1.pdf).
+There has been some discussion about implementing content hashes, since RDF data can be represented in many different formats. Most servers have the ability to serve the same resource in different formats, based on content negotiation (accept headers). So you cannot reliably use a hash on the raw content. However there has been some progress on creating a hashing algorithm on the parsed graph, as represented in memory. This is independant of the specific representation format used. See for example ["Hashing of RDF Graphs and a Solution to the Blank Node Problem - Edzard H&ouml;fix and Ina Schieferdeckeer"](http://ceur-ws.org/Vol-1259/method2014_submission_1.pdf).
 
 ## More Complex Redirect Scenario's
 
