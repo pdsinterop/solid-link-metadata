@@ -1488,7 +1488,7 @@ Possible extra rowspan handling
 	}
 </style>
   <meta content="Bikeshed version 2e3c4c68b, updated Fri Jan 14 14:49:00 2022 -0800" name="generator">
-  <meta content="7b17d4205020765dc698a69de2079a9f9eb5ae4d" name="document-revision">
+  <meta content="10fb20c247a07a2653974efc31f64a5622b8b2e6" name="document-revision">
 <style>/* style-autolinks */
 
 .css.css, .property.property, .descriptor.descriptor {
@@ -1865,7 +1865,7 @@ Parts of this work may be from another specification document.  If so, those par
       <li><a href="#lm-forget"><span class="secno">3.4</span> <span class="content">lm:forget</span></a>
      </ol>
     <li><a href="#last-write-wins"><span class="secno">4</span> <span class="content">Last Write Wins</span></a>
-    <li><a href="#redirection-and-or-deletion-of-folders"><span class="secno">5</span> <span class="content">Redirection and/or deletion of folders</span></a>
+    <li><a href="#folders"><span class="secno">5</span> <span class="content">Redirection and/or deletion of folders</span></a>
     <li><a href="#conformance"><span class="secno"></span> <span class="content"> Conformance</span></a>
     <li>
      <a href="#references"><span class="secno"></span> <span class="content">References</span></a>
@@ -1892,7 +1892,7 @@ example <code>.meta</code> description resource:</p>
 <pre class="language-turtle highlight"><c- k>@prefix</c-> <c- nn>lm:</c-> <c- g>&lt;https://purl.org/pdsinterop/link-metadata#></c-> <c- p>.</c->
 <c- k>@prefix</c-> <c- nn>local:</c-> <c- g>&lt;./></c-> <c- p>.</c->
 
-<c- nn>local</c-><c- p>:</c-><c- f>source</c-> <c- nn>lm</c-><c- p>:</c-><c- f>redirectPermanent</c-> <c- g>&lt;https://www.example.com/></c->
+<c- nn>local</c-><c- p>:</c-><c- f>source</c-> <c- nn>lm</c-><c- p>:</c-><c- f>redirectPermanent</c-> <c- g>&lt;https://www.example.com/></c-> <c- p>.</c->
 </pre>
    <p>If you upload this to a server, e.g.:</p>
 <pre class="language-http highlight">PUT https://solid.storage.net/.meta
@@ -1910,7 +1910,7 @@ HTTP 307 Temporary Redirect response to a request. Here is an example <code>.met
 <pre class="language-turtle highlight"><c- k>@prefix</c-> <c- nn>lm:</c-> <c- g>&lt;https://purl.org/pdsinterop/link-metadata#></c-> <c- p>.</c->
 <c- k>@prefix</c-> <c- nn>local:</c-> <c- g>&lt;./></c-> <c- p>.</c->
 
-<c- nn>local</c-><c- p>:</c-><c- f>source</c-> <c- nn>lm</c-><c- p>:</c-><c- f>redirectTemporary</c-> <c- g>&lt;https://www.example.com/></c->
+<c- nn>local</c-><c- p>:</c-><c- f>source</c-> <c- nn>lm</c-><c- p>:</c-><c- f>redirectTemporary</c-> <c- g>&lt;https://www.example.com/></c-> <c- p>.</c->
 </pre>
    <p>If you upload this to a server, e.g.:</p>
 <pre class="language-http highlight">PUT https://solid.storage.net/.meta
@@ -1927,7 +1927,7 @@ HTTP 307 Temporary Redirect response to a request. Here is an example <code>.met
 <pre class="language-turtle highlight"><c- k>@prefix</c-> <c- nn>lm:</c-> <c- g>&lt;https://purl.org/pdsinterop/link-metadata#></c-> <c- p>.</c->
 <c- k>@prefix</c-> <c- nn>local:</c-> <c- g>&lt;./></c-> <c- p>.</c->
 
-<c- nn>local</c-><c- p>:</c-><c- f>source</c-> <c- nn>lm</c-><c- p>:</c-><c- f>deleted</c-> <c- s>"Reason"</c->
+<c- nn>local</c-><c- p>:</c-><c- f>source</c-> <c- nn>lm</c-><c- p>:</c-><c- f>deleted</c-> <c- s>"Reason"</c-> <c- p>.</c->
 </pre>
    <p>If you upload this to a Solid Storage Server, e.g.:</p>
 <pre class="language-http highlight">PUT https://solid.storage.net/.meta
@@ -1964,14 +1964,14 @@ be handled according to these instructions.</p>
 be received and stored as normal. Any link metadata redirect, delete or forget triple with that file 
 as subject, must be automatically removed by the server.</p>
    <p>Subsequent requests will than be handled as normal.</p>
-   <h2 class="heading settled" data-level="5" id="redirection-and-or-deletion-of-folders"><span class="secno">5. </span><span class="content">Redirection and/or deletion of folders</span><a class="self-link" href="#redirection-and-or-deletion-of-folders"></a></h2>
+   <h2 class="heading settled" data-level="5" id="folders"><span class="secno">5. </span><span class="content">Redirection and/or deletion of folders</span><a class="self-link" href="#folders"></a></h2>
    <p>When a <code>.meta</code> description resource instructs a server to redirect or
 delete (or forget) a folder, all requests for resources contained in that folder
 must also be handled as redirected or deleted. Take this <code>.meta</code> description resource:</p>
 <pre class="language-turtle highlight"><c- k>@prefix</c-> <c- nn>lm:</c-> <c- g>&lt;https://purl.org/pdsinterop/link-metadata#></c-> <c- p>.</c->
 <c- k>@prefix</c-> <c- nn>local:</c-> <c- g>&lt;./></c-> <c- p>.</c->
 
-<c- nn>local</c-><c- p>:</c-><c- f>source</c-> <c- nn>lm</c-><c- p>:</c-><c- f>redirectPermanent</c-> <c- g>&lt;https://www.example.com/></c->
+<c- nn>local</c-><c- p>:</c-><c- f>source</c-> <c- nn>lm</c-><c- p>:</c-><c- f>redirectPermanent</c-> <c- g>&lt;https://www.example.com/></c-> <c- p>.</c->
 </pre>
    <p>If you upload this to a server, e.g.:</p>
 <pre class="language-http highlight">PUT https://solid.storage.net/.meta

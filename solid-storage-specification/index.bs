@@ -50,7 +50,7 @@ example `.meta` description resource:
 @prefix lm: <https://purl.org/pdsinterop/link-metadata#> .
 @prefix local: <./> .
 
-local:source lm:redirectPermanent <https://www.example.com/>
+local:source lm:redirectPermanent <https://www.example.com/> .
 ```
 
 If you upload this to a server, e.g.:
@@ -82,7 +82,7 @@ HTTP 307 Temporary Redirect response to a request. Here is an example
 @prefix lm: <https://purl.org/pdsinterop/link-metadata#> .
 @prefix local: <./> .
 
-local:source lm:redirectTemporary <https://www.example.com/>
+local:source lm:redirectTemporary <https://www.example.com/> .
 ```
 
 If you upload this to a server, e.g.:
@@ -112,7 +112,7 @@ This predicate is used to instruct a Solid Storage Server to send a HTTP 404 Not
 @prefix lm: <https://purl.org/pdsinterop/link-metadata#> .
 @prefix local: <./> .
 
-local:source lm:deleted "Reason"
+local:source lm:deleted "Reason" .
 ```
 
 If you upload this to a Solid Storage Server, e.g.:
@@ -177,7 +177,7 @@ as subject, must be automatically removed by the server.
 
 Subsequent requests will than be handled as normal.
 
-# Redirection and/or deletion of folders
+# Redirection and/or deletion of folders # {#folders}
 
 When a `.meta` description resource instructs a server to redirect or 
 delete (or forget) a folder, all requests for resources contained in that folder
@@ -187,7 +187,7 @@ must also be handled as redirected or deleted. Take this `.meta` description res
 @prefix lm: <https://purl.org/pdsinterop/link-metadata#> .
 @prefix local: <./> .
 
-local:source lm:redirectPermanent <https://www.example.com/>
+local:source lm:redirectPermanent <https://www.example.com/> .
 ```
 
 If you upload this to a server, e.g.:
