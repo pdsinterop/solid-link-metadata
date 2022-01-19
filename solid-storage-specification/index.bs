@@ -27,7 +27,189 @@ Status Text:
 
 # Introduction # {#intro}
 
-*This section is non-normative*
+This document outlines in detail how you can instruct a Solid Storage Server to
+send redirect (HTTP 307 or 308 status) or deleted (HTTP 404 or 410) responses
+to requests for specific files, by adding link metadata triples to the [description resource](https://solidproject.org/TR/protocol#auxiliary-resources-description-resource).
 
-## Out of Scope ## {##intro-out-of-scope}
+# Definitions # {#definitions}
 
+<dl>
+<dt>server</dt>
+<dd>A solid storage server, implementing this specification</dd>
+</dl>
+
+# Link-Metadata predicates # {#lm-predicates}
+
+## lm:redirectPermanent ## {#lm-redirectPermanent}
+
+This predicate is used to instruct a server to send a 
+HTTP 308 Permanently Redirected response to a request. Here is an 
+example `.meta` description resource:
+
+```turtle
+@prefix lm: <https://purl.org/pdsinterop/link-metadata#> .
+@prefix local: <./> .
+
+local:source lm:redirectPermanent <https://www.example.com/>
+```
+
+If you upload this to a server, e.g.:
+
+```http
+PUT https://solid.storage.net/.meta
+```
+
+Afterwards, when you request the `source` file from this server, like this:
+
+```http
+GET https://solid.storage.net/source
+```
+
+The server must respond with:
+
+```http
+HTTP/1.1 308 Moved Permanently
+Location: http://www.example.com/
+```
+
+## lm:redirectTemporary ## {#lm-redirectTemporary}
+
+This predicate is used to instruct a server to send a 
+HTTP 307 Temporary Redirect response to a request. Here is an example 
+`.meta` description resource:
+
+```turtle
+@prefix lm: <https://purl.org/pdsinterop/link-metadata#> .
+@prefix local: <./> .
+
+local:source lm:redirectTemporary <https://www.example.com/>
+```
+
+If you upload this to a server, e.g.:
+
+```http
+PUT https://solid.storage.net/.meta
+```
+
+Afterwards, when you request the `source` file from this server, like this:
+
+```http
+GET https://solid.storage.net/source
+```
+
+The server must respond with:
+
+```http
+HTTP/1.1 307 Temporary Redirect
+Location: http://www.example.com/
+```
+
+## lm:deleted ## {#lm-deleted}
+
+This predicate is used to instruct a Solid Storage Server to send a HTTP 404 Not Found response to a request. Here is an example `.meta` description resource:
+
+```turtle
+@prefix lm: <https://purl.org/pdsinterop/link-metadata#> .
+@prefix local: <./> .
+
+local:source lm:deleted "Reason"
+```
+
+If you upload this to a Solid Storage Server, e.g.:
+
+```http
+PUT https://solid.storage.net/.meta
+```
+
+Afterwards, when you request the `source` file from this server, like this:
+
+```http
+GET https://solid.storage.net/source
+```
+
+The server must respond with:
+
+```http
+HTTP/1.1 404 Not Found
+```
+
+## lm:forget ## {#lm-forget}
+
+This predicate is used to instruct a server to send a 
+HTTP 410 Gone response to a request. Here is an example `.meta` 
+description resource:
+
+```turtle
+@prefix lm: <https://purl.org/pdsinterop/link-metadata#> .
+@prefix local: <./> .
+
+local:source lm:forget "Reason" .
+```
+
+If you upload this to a server, e.g.:
+
+```http
+PUT https://solid.storage.net/.meta
+```
+
+Afterwards, when you request the `source` file from this server, like this:
+
+```http
+GET https://solid.storage.net/source
+```
+
+The server must respond with:
+
+```http
+HTTP/1.1 410 Gone
+```
+
+# Last Write Wins # {#last-write-wins}
+
+When a `.meta` description resource is uploaded to a server, the link-metadata triples
+inside it override any existing files or directories. If file `source` exists, but the `.meta` file 
+instructs the server to redirect it, or delete/forget it, any subsequent requests for that file should 
+be handled according to these instructions.
+
+The exception is when the server receives a `PUT` request for that file. In that case, the file should 
+be received and stored as normal. Any link metadata redirect, delete or forget triple with that file 
+as subject, must be automatically removed by the server.
+
+Subsequent requests will than be handled as normal.
+
+# Redirection and/or deletion of folders
+
+When a `.meta` description resource instructs a server to redirect or 
+delete (or forget) a folder, all requests for resources contained in that folder
+must also be handled as redirected or deleted. Take this `.meta` description resource:
+
+```turtle
+@prefix lm: <https://purl.org/pdsinterop/link-metadata#> .
+@prefix local: <./> .
+
+local:source lm:redirectPermanent <https://www.example.com/>
+```
+
+If you upload this to a server, e.g.:
+
+```http
+PUT https://solid.storage.net/.meta
+```
+
+Afterwards, when you request any resource contained within 
+the `source/` folder from this server, e.g.:
+
+```http
+GET https://solid.storage.net/source/child/resource
+```
+
+The server must respond with:
+
+```http
+HTTP/1.1 308 Moved Permanently
+Location: http://www.example.com/child/resource
+```
+
+The server must not check if the `source/` folder exists locally.
+It must not check if the redirected resource is/was a folder.
+It must not check if the requested resource exists locally.
