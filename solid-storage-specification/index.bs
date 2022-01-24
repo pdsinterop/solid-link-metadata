@@ -31,12 +31,49 @@ This document outlines in detail how you can instruct a Solid Storage Server to
 send redirect (HTTP 307 or 308 status) or deleted (HTTP 404 or 410) responses
 to requests for specific files, by adding link metadata triples to the [description resource](https://solidproject.org/TR/protocol#auxiliary-resources-description-resource).
 
+In the remainder of this specification wherever you see the `.meta` filename referenced, it is assumed that this
+is the filename and URL returned in the LINK header in an earlier HTTP request to the parent folder of the resource
+being manipulated.
+
 # Definitions # {#definitions}
 
 <dl>
 <dt>server</dt>
 <dd>A solid storage server, implementing this specification</dd>
 </dl>
+
+# Fetching and updating the correct auxiliary resource # {#lm-auxiliary-description-resource}
+
+To instruct a Solid Storage Server to redirect or delete a resource,
+you must fetch, change and upload the correct [Auxiliary Description 
+Resource](https://solidproject.org/TR/protocol#auxiliary-resources-description-resource).
+
+The correct description resource is the one returned in the LINK header
+on a HTTP request of the parent container that contains the resource
+you want to redirect or delete.
+
+<div class=example>
+For example, to redirect this resource:
+```
+https://www.example.com/container/resource.html
+```
+You must do a HTTP request, e.g. HEAD or GET, on the container:
+```
+HEAD https://www.example.com/container/
+```
+This will return response headers, among them this LINK header:
+```
+Link: <https://www.example.com/container/.meta>; rel="describes"
+```
+So you can redirect the original resource.html by adding link-metadata
+predicates to the resource at `https://www.example.com/container/.meta`. 
+</div>
+
+Note: In the remainder of this specification wherever you see the `.meta` 
+filename referenced, it is assumed that this is the filename and URL returned 
+in the LINK header in an earlier HTTP request to the parent folder of the 
+resource being manipulated, according to the rules outlined above.
+
 
 # Link-Metadata predicates # {#lm-predicates}
 
@@ -65,12 +102,14 @@ Afterwards, when you request the `source` file from this server, like this:
 GET https://solid.storage.net/source
 ```
 
-The server must respond with:
+<div class=assertion>
+Assert: The server must respond with:
 
 ```http
 HTTP/1.1 308 Moved Permanently
 Location: http://www.example.com/
 ```
+</div>
 
 ## lm:redirectTemporary ## {#lm-redirectTemporary}
 
@@ -97,12 +136,14 @@ Afterwards, when you request the `source` file from this server, like this:
 GET https://solid.storage.net/source
 ```
 
-The server must respond with:
+<div class=assertion>
+Assert: The server must respond with:
 
 ```http
 HTTP/1.1 307 Temporary Redirect
 Location: http://www.example.com/
 ```
+</div>
 
 ## lm:deleted ## {#lm-deleted}
 
@@ -127,11 +168,13 @@ Afterwards, when you request the `source` file from this server, like this:
 GET https://solid.storage.net/source
 ```
 
-The server must respond with:
+<div class=assertion>
+Assert: The server must respond with:
 
 ```http
 HTTP/1.1 404 Not Found
 ```
+</div>
 
 ## lm:forget ## {#lm-forget}
 
@@ -158,11 +201,13 @@ Afterwards, when you request the `source` file from this server, like this:
 GET https://solid.storage.net/source
 ```
 
-The server must respond with:
+<div class=assertion>
+Assert: The server must respond with:
 
 ```http
 HTTP/1.1 410 Gone
 ```
+</div>
 
 # Last Write Wins # {#last-write-wins}
 
@@ -210,6 +255,8 @@ HTTP/1.1 308 Moved Permanently
 Location: http://www.example.com/child/resource
 ```
 
-The server must not check if the `source/` folder exists locally.
-It must not check if the redirected resource is/was a folder.
-It must not check if the requested resource exists locally.
+Assert: The server must not check if the redirected resource is/was a folder.
+
+Assert: The server must not check if the requested resource exists locally.
+
+Assert: The server must ignore any earlier instructions in a `.meta` resource on child resources.

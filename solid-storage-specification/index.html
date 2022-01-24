@@ -1488,7 +1488,7 @@ Possible extra rowspan handling
 	}
 </style>
   <meta content="Bikeshed version 2e3c4c68b, updated Fri Jan 14 14:49:00 2022 -0800" name="generator">
-  <meta content="10fb20c247a07a2653974efc31f64a5622b8b2e6" name="document-revision">
+  <meta content="738992e6643a246ca70d0fd45bd61319f80aa95f" name="document-revision">
 <style>/* style-autolinks */
 
 .css.css, .property.property, .descriptor.descriptor {
@@ -1824,7 +1824,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">Solid-Storage-Link-Metadata</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="profile-and-date"><span class="content">Living Document, <time class="dt-updated" datetime="2022-01-19">19 January 2022</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="profile-and-date"><span class="content">Living Document, <time class="dt-updated" datetime="2022-01-24">24 January 2022</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>Issue Tracking:
@@ -1836,7 +1836,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <div data-fill-with="warning"></div>
    <p class="copyright" data-fill-with="copyright"><a href="http://creativecommons.org/publicdomain/zero/1.0/" rel="license"><img alt="CC0" height="15" src="https://licensebuttons.net/p/zero/1.0/80x15.png" width="80"></a> To the extent possible under law, the editors have waived all copyright
 and related or neighboring rights to this work.
-In addition, as of 19 January 2022,
+In addition, as of 24 January 2022,
 the editors have made this specification available under the <a href="http://www.openwebfoundation.org/legal/the-owf-1-0-agreements/owfa-1-0" rel="license">Open Web Foundation Agreement Version 1.0</a>,
 which is available at http://www.openwebfoundation.org/legal/the-owf-1-0-agreements/owfa-1-0.
 Parts of this work may be from another specification document.  If so, those parts are instead covered by the license of that specification document. </p>
@@ -1856,16 +1856,17 @@ Parts of this work may be from another specification document.  If so, those par
    <ol class="toc" role="directory">
     <li><a href="#intro"><span class="secno">1</span> <span class="content">Introduction</span></a>
     <li><a href="#definitions"><span class="secno">2</span> <span class="content">Definitions</span></a>
+    <li><a href="#lm-auxiliary-description-resource"><span class="secno">3</span> <span class="content">Fetching and updating the correct auxiliary resource</span></a>
     <li>
-     <a href="#lm-predicates"><span class="secno">3</span> <span class="content">Link-Metadata predicates</span></a>
+     <a href="#lm-predicates"><span class="secno">4</span> <span class="content">Link-Metadata predicates</span></a>
      <ol class="toc">
-      <li><a href="#lm-redirectPermanent"><span class="secno">3.1</span> <span class="content">lm:redirectPermanent</span></a>
-      <li><a href="#lm-redirectTemporary"><span class="secno">3.2</span> <span class="content">lm:redirectTemporary</span></a>
-      <li><a href="#lm-deleted"><span class="secno">3.3</span> <span class="content">lm:deleted</span></a>
-      <li><a href="#lm-forget"><span class="secno">3.4</span> <span class="content">lm:forget</span></a>
+      <li><a href="#lm-redirectPermanent"><span class="secno">4.1</span> <span class="content">lm:redirectPermanent</span></a>
+      <li><a href="#lm-redirectTemporary"><span class="secno">4.2</span> <span class="content">lm:redirectTemporary</span></a>
+      <li><a href="#lm-deleted"><span class="secno">4.3</span> <span class="content">lm:deleted</span></a>
+      <li><a href="#lm-forget"><span class="secno">4.4</span> <span class="content">lm:forget</span></a>
      </ol>
-    <li><a href="#last-write-wins"><span class="secno">4</span> <span class="content">Last Write Wins</span></a>
-    <li><a href="#folders"><span class="secno">5</span> <span class="content">Redirection and/or deletion of folders</span></a>
+    <li><a href="#last-write-wins"><span class="secno">5</span> <span class="content">Last Write Wins</span></a>
+    <li><a href="#folders"><span class="secno">6</span> <span class="content">Redirection and/or deletion of folders</span></a>
     <li><a href="#conformance"><span class="secno"></span> <span class="content"> Conformance</span></a>
     <li>
      <a href="#references"><span class="secno"></span> <span class="content">References</span></a>
@@ -1879,13 +1880,39 @@ Parts of this work may be from another specification document.  If so, those par
    <p>This document outlines in detail how you can instruct a Solid Storage Server to
 send redirect (HTTP 307 or 308 status) or deleted (HTTP 404 or 410) responses
 to requests for specific files, by adding link metadata triples to the <a href="https://solidproject.org/TR/protocol#auxiliary-resources-description-resource">description resource</a>.</p>
+   <p>In the remainder of this specification wherever you see the <code>.meta</code> filename referenced, it is assumed that this
+is the filename and URL returned in the LINK header in an earlier HTTP request to the parent folder of the resource
+being manipulated.</p>
    <h2 class="heading settled" data-level="2" id="definitions"><span class="secno">2. </span><span class="content">Definitions</span><a class="self-link" href="#definitions"></a></h2>
    <dl>
     <dt>server
     <dd>A solid storage server, implementing this specification
    </dl>
-   <h2 class="heading settled" data-level="3" id="lm-predicates"><span class="secno">3. </span><span class="content">Link-Metadata predicates</span><a class="self-link" href="#lm-predicates"></a></h2>
-   <h3 class="heading settled" data-level="3.1" id="lm-redirectPermanent"><span class="secno">3.1. </span><span class="content">lm:redirectPermanent</span><a class="self-link" href="#lm-redirectPermanent"></a></h3>
+   <h2 class="heading settled" data-level="3" id="lm-auxiliary-description-resource"><span class="secno">3. </span><span class="content">Fetching and updating the correct auxiliary resource</span><a class="self-link" href="#lm-auxiliary-description-resource"></a></h2>
+   <p>To instruct a Solid Storage Server to redirect or delete a resource,
+you must fetch, change and upload the correct <a href="https://solidproject.org/TR/protocol#auxiliary-resources-description-resource">Auxiliary Description 
+Resource</a>.</p>
+   <p>The correct description resource is the one returned in the LINK header
+on a HTTP request of the parent container that contains the resource
+you want to redirect or delete.</p>
+   <div class="example" id="example-a210d23a">
+    <a class="self-link" href="#example-a210d23a"></a> For example, to redirect this resource: 
+<pre>https://www.example.com/container/resource.html
+</pre>
+    You must do a HTTP request, e.g. HEAD or GET, on the container: 
+<pre>HEAD https://www.example.com/container/
+</pre>
+    This will return response headers, among them this LINK header: 
+<pre>Link: &lt;https://www.example.com/container/.meta>; rel="describes"
+</pre>
+    So you can redirect the original resource.html by adding link-metadata
+predicates to the resource at <code>https://www.example.com/container/.meta</code>. 
+   </div>
+   <p class="note" role="note"><span>Note:</span> In the remainder of this specification wherever you see the <code>.meta</code> filename referenced, it is assumed that this is the filename and URL returned 
+in the LINK header in an earlier HTTP request to the parent folder of the 
+resource being manipulated, according to the rules outlined above.</p>
+   <h2 class="heading settled" data-level="4" id="lm-predicates"><span class="secno">4. </span><span class="content">Link-Metadata predicates</span><a class="self-link" href="#lm-predicates"></a></h2>
+   <h3 class="heading settled" data-level="4.1" id="lm-redirectPermanent"><span class="secno">4.1. </span><span class="content">lm:redirectPermanent</span><a class="self-link" href="#lm-redirectPermanent"></a></h3>
    <p>This predicate is used to instruct a server to send a
 HTTP 308 Permanently Redirected response to a request. Here is an 
 example <code>.meta</code> description resource:</p>
@@ -1900,11 +1927,13 @@ example <code>.meta</code> description resource:</p>
    <p>Afterwards, when you request the <code>source</code> file from this server, like this:</p>
 <pre class="language-http highlight">GET https://solid.storage.net/source
 </pre>
-   <p>The server must respond with:</p>
+   <div class="assertion">
+     Assert: The server must respond with: 
 <pre class="language-http highlight"><c- kr>HTTP</c-><c- o>/</c-><c- m>1.1</c-> <c- m>308</c-> <c- ne>Moved Permanently</c->
 <c- e>Location</c-><c- o>:</c-> <c- l>http://www.example.com/</c->
 </pre>
-   <h3 class="heading settled" data-level="3.2" id="lm-redirectTemporary"><span class="secno">3.2. </span><span class="content">lm:redirectTemporary</span><a class="self-link" href="#lm-redirectTemporary"></a></h3>
+   </div>
+   <h3 class="heading settled" data-level="4.2" id="lm-redirectTemporary"><span class="secno">4.2. </span><span class="content">lm:redirectTemporary</span><a class="self-link" href="#lm-redirectTemporary"></a></h3>
    <p>This predicate is used to instruct a server to send a
 HTTP 307 Temporary Redirect response to a request. Here is an example <code>.meta</code> description resource:</p>
 <pre class="language-turtle highlight"><c- k>@prefix</c-> <c- nn>lm:</c-> <c- g>&lt;https://purl.org/pdsinterop/link-metadata#></c-> <c- p>.</c->
@@ -1918,11 +1947,13 @@ HTTP 307 Temporary Redirect response to a request. Here is an example <code>.met
    <p>Afterwards, when you request the <code>source</code> file from this server, like this:</p>
 <pre class="language-http highlight">GET https://solid.storage.net/source
 </pre>
-   <p>The server must respond with:</p>
+   <div class="assertion">
+     Assert: The server must respond with: 
 <pre class="language-http highlight"><c- kr>HTTP</c-><c- o>/</c-><c- m>1.1</c-> <c- m>307</c-> <c- ne>Temporary Redirect</c->
 <c- e>Location</c-><c- o>:</c-> <c- l>http://www.example.com/</c->
 </pre>
-   <h3 class="heading settled" data-level="3.3" id="lm-deleted"><span class="secno">3.3. </span><span class="content">lm:deleted</span><a class="self-link" href="#lm-deleted"></a></h3>
+   </div>
+   <h3 class="heading settled" data-level="4.3" id="lm-deleted"><span class="secno">4.3. </span><span class="content">lm:deleted</span><a class="self-link" href="#lm-deleted"></a></h3>
    <p>This predicate is used to instruct a Solid Storage Server to send a HTTP 404 Not Found response to a request. Here is an example <code>.meta</code> description resource:</p>
 <pre class="language-turtle highlight"><c- k>@prefix</c-> <c- nn>lm:</c-> <c- g>&lt;https://purl.org/pdsinterop/link-metadata#></c-> <c- p>.</c->
 <c- k>@prefix</c-> <c- nn>local:</c-> <c- g>&lt;./></c-> <c- p>.</c->
@@ -1935,10 +1966,12 @@ HTTP 307 Temporary Redirect response to a request. Here is an example <code>.met
    <p>Afterwards, when you request the <code>source</code> file from this server, like this:</p>
 <pre class="language-http highlight">GET https://solid.storage.net/source
 </pre>
-   <p>The server must respond with:</p>
+   <div class="assertion">
+     Assert: The server must respond with: 
 <pre class="language-http highlight"><c- kr>HTTP</c-><c- o>/</c-><c- m>1.1</c-> <c- m>404</c-> <c- ne>Not Found</c->
 </pre>
-   <h3 class="heading settled" data-level="3.4" id="lm-forget"><span class="secno">3.4. </span><span class="content">lm:forget</span><a class="self-link" href="#lm-forget"></a></h3>
+   </div>
+   <h3 class="heading settled" data-level="4.4" id="lm-forget"><span class="secno">4.4. </span><span class="content">lm:forget</span><a class="self-link" href="#lm-forget"></a></h3>
    <p>This predicate is used to instruct a server to send a
 HTTP 410 Gone response to a request. Here is an example <code>.meta</code> description resource:</p>
 <pre class="language-turtle highlight"><c- k>@prefix</c-> <c- nn>lm:</c-> <c- g>&lt;https://purl.org/pdsinterop/link-metadata#></c-> <c- p>.</c->
@@ -1952,10 +1985,12 @@ HTTP 410 Gone response to a request. Here is an example <code>.meta</code> descr
    <p>Afterwards, when you request the <code>source</code> file from this server, like this:</p>
 <pre class="language-http highlight">GET https://solid.storage.net/source
 </pre>
-   <p>The server must respond with:</p>
+   <div class="assertion">
+     Assert: The server must respond with: 
 <pre class="language-http highlight"><c- kr>HTTP</c-><c- o>/</c-><c- m>1.1</c-> <c- m>410</c-> <c- ne>Gone</c->
 </pre>
-   <h2 class="heading settled" data-level="4" id="last-write-wins"><span class="secno">4. </span><span class="content">Last Write Wins</span><a class="self-link" href="#last-write-wins"></a></h2>
+   </div>
+   <h2 class="heading settled" data-level="5" id="last-write-wins"><span class="secno">5. </span><span class="content">Last Write Wins</span><a class="self-link" href="#last-write-wins"></a></h2>
    <p>When a <code>.meta</code> description resource is uploaded to a server, the link-metadata triples
 inside it override any existing files or directories. If file <code>source</code> exists, but the <code>.meta</code> file 
 instructs the server to redirect it, or delete/forget it, any subsequent requests for that file should 
@@ -1964,7 +1999,7 @@ be handled according to these instructions.</p>
 be received and stored as normal. Any link metadata redirect, delete or forget triple with that file 
 as subject, must be automatically removed by the server.</p>
    <p>Subsequent requests will than be handled as normal.</p>
-   <h2 class="heading settled" data-level="5" id="folders"><span class="secno">5. </span><span class="content">Redirection and/or deletion of folders</span><a class="self-link" href="#folders"></a></h2>
+   <h2 class="heading settled" data-level="6" id="folders"><span class="secno">6. </span><span class="content">Redirection and/or deletion of folders</span><a class="self-link" href="#folders"></a></h2>
    <p>When a <code>.meta</code> description resource instructs a server to redirect or
 delete (or forget) a folder, all requests for resources contained in that folder
 must also be handled as redirected or deleted. Take this <code>.meta</code> description resource:</p>
@@ -1984,9 +2019,9 @@ the <code>source/</code> folder from this server, e.g.:</p>
 <pre class="language-http highlight"><c- kr>HTTP</c-><c- o>/</c-><c- m>1.1</c-> <c- m>308</c-> <c- ne>Moved Permanently</c->
 <c- e>Location</c-><c- o>:</c-> <c- l>http://www.example.com/child/resource</c->
 </pre>
-   <p>The server must not check if the <code>source/</code> folder exists locally.
-It must not check if the redirected resource is/was a folder.
-It must not check if the requested resource exists locally.</p>
+   <p class="assertion">Assert: The server must not check if the redirected resource is/was a folder.</p>
+   <p class="assertion">Assert: The server must not check if the requested resource exists locally.</p>
+   <p class="assertion">Assert: The server must ignore any earlier instructions in a <code>.meta</code> resource on child resources.</p>
   </main>
   <div data-fill-with="conformance">
    <h2 class="no-ref no-num heading settled" id="conformance"><span class="content"> Conformance</span><a class="self-link" href="#conformance"></a></h2>
