@@ -1488,7 +1488,7 @@ Possible extra rowspan handling
 	}
 </style>
   <meta content="Bikeshed version 2e3c4c68b, updated Fri Jan 14 14:49:00 2022 -0800" name="generator">
-  <meta content="07d1c9ec995328911d8afd0dbccd11036fde5f94" name="document-revision">
+  <meta content="3828dfb7f78fbd4851538fa183452794f040ae55" name="document-revision">
 <style>/* style-autolinks */
 
 .css.css, .property.property, .descriptor.descriptor {
@@ -1877,7 +1877,7 @@ Parts of this work may be from another specification document.  If so, those par
   </nav>
   <main>
    <h2 class="heading settled" data-level="1" id="intro"><span class="secno">1. </span><span class="content">Introduction</span><a class="self-link" href="#intro"></a></h2>
-   <p>This document outlines in detail how you can instruct a Solid Storage Server to
+   <p>This document outlines in detail how a Solid Application can instruct a Solid Storage Server to
 send redirect (HTTP 307 or 308 status) or deleted (HTTP 404 or 410) responses
 to requests for specific files, by adding link metadata triples to the <a href="https://solidproject.org/TR/protocol#auxiliary-resources-description-resource">description resource</a>.</p>
    <p>In the remainder of this specification wherever you see the <code>.meta</code> filename referenced, it is assumed that this
@@ -1887,6 +1887,8 @@ being manipulated.</p>
    <dl>
     <dt>server
     <dd>A solid storage server, implementing this specification
+    <dt>client
+    <dd>A solid application that accesses the server.
    </dl>
    <h2 class="heading settled" data-level="3" id="lm-auxiliary-description-resource"><span class="secno">3. </span><span class="content">Fetching and updating the correct auxiliary resource</span><a class="self-link" href="#lm-auxiliary-description-resource"></a></h2>
    <p>To instruct a Solid Storage Server to redirect or delete a resource,
@@ -1895,18 +1897,18 @@ Resource</a>.</p>
    <p>The correct description resource is the one returned in the <code>Link</code> header
 on a HTTP request of the parent container that contains the resource
 you want to redirect or delete.</p>
-   <div class="example" id="example-2678983a">
-    <a class="self-link" href="#example-2678983a"></a> For example, to redirect this resource: 
+   <div class="example" id="example-24fe6ebe">
+    <a class="self-link" href="#example-24fe6ebe"></a> For example, to redirect this resource: 
 <pre>https://www.example.com/container/resource.html
 </pre>
-    You must do a HTTP request, e.g. HEAD or GET, on the container: 
+    The client must do a HTTP request, e.g. HEAD or GET, on the container: 
 <pre>HEAD https://www.example.com/container/
 </pre>
     This will return response headers, among them this <code>Link</code> header: 
 <pre>Link: &lt;https://www.example.com/container/.meta>; rel="describes"
 </pre>
-    So you can redirect the original resource.html by adding link-metadata
-predicates to the resource at <code>https://www.example.com/container/.meta</code>. 
+    So the client can instruct the server to redirect the original resource.html 
+by adding link-metadata predicates to the resource at <code>https://www.example.com/container/.meta</code>. 
    </div>
    <p class="note" role="note"><span>Note:</span> In the remainder of this specification wherever you see the <code>.meta</code> filename referenced, it is assumed that this is the filename and URL returned 
 in the <code>Link</code> header in an earlier HTTP request to the parent folder of the 
@@ -1921,10 +1923,10 @@ example <code>.meta</code> description resource:</p>
 
 <c- nn>local</c-><c- p>:</c-><c- f>source</c-> <c- nn>lm</c-><c- p>:</c-><c- f>redirectPermanent</c-> <c- g>&lt;https://www.example.com/></c-> <c- p>.</c->
 </pre>
-   <p>If you upload this to a server, e.g.:</p>
+   <p>If the client uploads this to a server, e.g.:</p>
 <pre class="language-http highlight">PUT https://solid.storage.net/.meta
 </pre>
-   <p>Afterwards, when you request the <code>source</code> file from this server, like this:</p>
+   <p>Afterwards, when the client requests the <code>source</code> file from this server, like this:</p>
 <pre class="language-http highlight">GET https://solid.storage.net/source
 </pre>
    <div class="assertion">
@@ -1941,10 +1943,10 @@ HTTP 307 Temporary Redirect response to a request. Here is an example <code>.met
 
 <c- nn>local</c-><c- p>:</c-><c- f>source</c-> <c- nn>lm</c-><c- p>:</c-><c- f>redirectTemporary</c-> <c- g>&lt;https://www.example.com/></c-> <c- p>.</c->
 </pre>
-   <p>If you upload this to a server, e.g.:</p>
+   <p>If the client uploads this to a server, e.g.:</p>
 <pre class="language-http highlight">PUT https://solid.storage.net/.meta
 </pre>
-   <p>Afterwards, when you request the <code>source</code> file from this server, like this:</p>
+   <p>Afterwards, when the client requests the <code>source</code> file from this server, like this:</p>
 <pre class="language-http highlight">GET https://solid.storage.net/source
 </pre>
    <div class="assertion">
@@ -1954,16 +1956,17 @@ HTTP 307 Temporary Redirect response to a request. Here is an example <code>.met
 </pre>
    </div>
    <h3 class="heading settled" data-level="4.3" id="lm-deleted"><span class="secno">4.3. </span><span class="content">lm:deleted</span><a class="self-link" href="#lm-deleted"></a></h3>
-   <p>This predicate is used to instruct a Solid Storage Server to send a HTTP 404 Not Found response to a request. Here is an example <code>.meta</code> description resource:</p>
+   <p>This predicate is used to instruct a Solid Storage Server to send a
+HTTP 404 Not Found response to a request. Here is an example <code>.meta</code> description resource:</p>
 <pre class="language-turtle highlight"><c- k>@prefix</c-> <c- nn>lm:</c-> <c- g>&lt;https://purl.org/pdsinterop/link-metadata#></c-> <c- p>.</c->
 <c- k>@prefix</c-> <c- nn>local:</c-> <c- g>&lt;./></c-> <c- p>.</c->
 
 <c- nn>local</c-><c- p>:</c-><c- f>source</c-> <c- nn>lm</c-><c- p>:</c-><c- f>deleted</c-> <c- s>"Reason"</c-> <c- p>.</c->
 </pre>
-   <p>If you upload this to a Solid Storage Server, e.g.:</p>
+   <p>If the client uploads this to a Solid Storage Server, e.g.:</p>
 <pre class="language-http highlight">PUT https://solid.storage.net/.meta
 </pre>
-   <p>Afterwards, when you request the <code>source</code> file from this server, like this:</p>
+   <p>Afterwards, when the client requests the <code>source</code> file from this server, like this:</p>
 <pre class="language-http highlight">GET https://solid.storage.net/source
 </pre>
    <div class="assertion">
@@ -1979,10 +1982,10 @@ HTTP 410 Gone response to a request. Here is an example <code>.meta</code> descr
 
 <c- nn>local</c-><c- p>:</c-><c- f>source</c-> <c- nn>lm</c-><c- p>:</c-><c- f>forget</c-> <c- s>"Reason"</c-> <c- p>.</c->
 </pre>
-   <p>If you upload this to a server, e.g.:</p>
+   <p>If the client uploads this to a server, e.g.:</p>
 <pre class="language-http highlight">PUT https://solid.storage.net/.meta
 </pre>
-   <p>Afterwards, when you request the <code>source</code> file from this server, like this:</p>
+   <p>Afterwards, when the client requests the <code>source</code> file from this server, like this:</p>
 <pre class="language-http highlight">GET https://solid.storage.net/source
 </pre>
    <div class="assertion">
@@ -2008,17 +2011,19 @@ must also be handled as redirected or deleted. Take this <code>.meta</code> desc
 
 <c- nn>local</c-><c- p>:</c-><c- f>source</c-> <c- nn>lm</c-><c- p>:</c-><c- f>redirectPermanent</c-> <c- g>&lt;https://www.example.com/></c-> <c- p>.</c->
 </pre>
-   <p>If you upload this to a server, e.g.:</p>
+   <p>If the client uploads this to a server, e.g.:</p>
 <pre class="language-http highlight">PUT https://solid.storage.net/.meta
 </pre>
-   <p>Afterwards, when you request any resource contained within
+   <p>Afterwards, when the client requests any resource contained within
 the <code>source/</code> folder from this server, e.g.:</p>
 <pre class="language-http highlight">GET https://solid.storage.net/source/child/resource
 </pre>
-   <p>The server must respond with:</p>
+   <div class="assertion">
+     Assert: The server must respond with: 
 <pre class="language-http highlight"><c- kr>HTTP</c-><c- o>/</c-><c- m>1.1</c-> <c- m>308</c-> <c- ne>Moved Permanently</c->
 <c- e>Location</c-><c- o>:</c-> <c- l>http://www.example.com/child/resource</c->
 </pre>
+   </div>
    <p class="assertion">Assert: The server must not check if the redirected resource is/was a folder.</p>
    <p class="assertion">Assert: The server must not check if the requested resource exists locally.</p>
    <p class="assertion">Assert: The server must ignore any earlier instructions in a <code>.meta</code> resource on child resources.</p>

@@ -27,7 +27,7 @@ Status Text:
 
 # Introduction # {#intro}
 
-This document outlines in detail how you can instruct a Solid Storage Server to
+This document outlines in detail how a Solid Application can instruct a Solid Storage Server to
 send redirect (HTTP 307 or 308 status) or deleted (HTTP 404 or 410) responses
 to requests for specific files, by adding link metadata triples to the [description resource](https://solidproject.org/TR/protocol#auxiliary-resources-description-resource).
 
@@ -40,6 +40,8 @@ being manipulated.
 <dl>
 <dt>server</dt>
 <dd>A solid storage server, implementing this specification</dd>
+<dt>client</dt>
+<dd>A solid application that accesses the server.</dd>
 </dl>
 
 # Fetching and updating the correct auxiliary resource # {#lm-auxiliary-description-resource}
@@ -57,7 +59,7 @@ For example, to redirect this resource:
 ```
 https://www.example.com/container/resource.html
 ```
-You must do a HTTP request, e.g. HEAD or GET, on the container:
+The client must do a HTTP request, e.g. HEAD or GET, on the container:
 ```
 HEAD https://www.example.com/container/
 ```
@@ -65,8 +67,9 @@ This will return response headers, among them this `Link` header:
 ```
 Link: <https://www.example.com/container/.meta>; rel="describes"
 ```
-So you can redirect the original resource.html by adding link-metadata
-predicates to the resource at `https://www.example.com/container/.meta`. 
+So the client can instruct the server to redirect the original resource.html 
+by adding link-metadata predicates to the resource at 
+`https://www.example.com/container/.meta`. 
 </div>
 
 Note: In the remainder of this specification wherever you see the `.meta` 
@@ -90,13 +93,13 @@ example `.meta` description resource:
 local:source lm:redirectPermanent <https://www.example.com/> .
 ```
 
-If you upload this to a server, e.g.:
+If the client uploads this to a server, e.g.:
 
 ```http
 PUT https://solid.storage.net/.meta
 ```
 
-Afterwards, when you request the `source` file from this server, like this:
+Afterwards, when the client requests the `source` file from this server, like this:
 
 ```http
 GET https://solid.storage.net/source
@@ -124,13 +127,13 @@ HTTP 307 Temporary Redirect response to a request. Here is an example
 local:source lm:redirectTemporary <https://www.example.com/> .
 ```
 
-If you upload this to a server, e.g.:
+If the client uploads this to a server, e.g.:
 
 ```http
 PUT https://solid.storage.net/.meta
 ```
 
-Afterwards, when you request the `source` file from this server, like this:
+Afterwards, when the client requests the `source` file from this server, like this:
 
 ```http
 GET https://solid.storage.net/source
@@ -147,7 +150,8 @@ Location: http://www.example.com/
 
 ## lm:deleted ## {#lm-deleted}
 
-This predicate is used to instruct a Solid Storage Server to send a HTTP 404 Not Found response to a request. Here is an example `.meta` description resource:
+This predicate is used to instruct a Solid Storage Server to send a 
+HTTP 404 Not Found response to a request. Here is an example `.meta` description resource:
 
 ```turtle
 @prefix lm: <https://purl.org/pdsinterop/link-metadata#> .
@@ -156,13 +160,13 @@ This predicate is used to instruct a Solid Storage Server to send a HTTP 404 Not
 local:source lm:deleted "Reason" .
 ```
 
-If you upload this to a Solid Storage Server, e.g.:
+If the client uploads this to a Solid Storage Server, e.g.:
 
 ```http
 PUT https://solid.storage.net/.meta
 ```
 
-Afterwards, when you request the `source` file from this server, like this:
+Afterwards, when the client requests the `source` file from this server, like this:
 
 ```http
 GET https://solid.storage.net/source
@@ -189,13 +193,13 @@ description resource:
 local:source lm:forget "Reason" .
 ```
 
-If you upload this to a server, e.g.:
+If the client uploads this to a server, e.g.:
 
 ```http
 PUT https://solid.storage.net/.meta
 ```
 
-Afterwards, when you request the `source` file from this server, like this:
+Afterwards, when the client requests the `source` file from this server, like this:
 
 ```http
 GET https://solid.storage.net/source
@@ -235,25 +239,27 @@ must also be handled as redirected or deleted. Take this `.meta` description res
 local:source lm:redirectPermanent <https://www.example.com/> .
 ```
 
-If you upload this to a server, e.g.:
+If the client uploads this to a server, e.g.:
 
 ```http
 PUT https://solid.storage.net/.meta
 ```
 
-Afterwards, when you request any resource contained within 
+Afterwards, when the client requests any resource contained within 
 the `source/` folder from this server, e.g.:
 
 ```http
 GET https://solid.storage.net/source/child/resource
 ```
 
-The server must respond with:
+<div class=assertion>
+Assert: The server must respond with:
 
 ```http
 HTTP/1.1 308 Moved Permanently
 Location: http://www.example.com/child/resource
 ```
+</div>
 
 Assert: The server must not check if the redirected resource is/was a folder.
 
