@@ -1488,7 +1488,7 @@ Possible extra rowspan handling
 	}
 </style>
   <meta content="Bikeshed version 2e3c4c68b, updated Fri Jan 14 14:49:00 2022 -0800" name="generator">
-  <meta content="738992e6643a246ca70d0fd45bd61319f80aa95f" name="document-revision">
+  <meta content="07d1c9ec995328911d8afd0dbccd11036fde5f94" name="document-revision">
 <style>/* style-autolinks */
 
 .css.css, .property.property, .descriptor.descriptor {
@@ -1881,7 +1881,7 @@ Parts of this work may be from another specification document.  If so, those par
 send redirect (HTTP 307 or 308 status) or deleted (HTTP 404 or 410) responses
 to requests for specific files, by adding link metadata triples to the <a href="https://solidproject.org/TR/protocol#auxiliary-resources-description-resource">description resource</a>.</p>
    <p>In the remainder of this specification wherever you see the <code>.meta</code> filename referenced, it is assumed that this
-is the filename and URL returned in the LINK header in an earlier HTTP request to the parent folder of the resource
+is the filename and URL returned in the <code>Link</code> header in an earlier HTTP request to the parent folder of the resource
 being manipulated.</p>
    <h2 class="heading settled" data-level="2" id="definitions"><span class="secno">2. </span><span class="content">Definitions</span><a class="self-link" href="#definitions"></a></h2>
    <dl>
@@ -1892,24 +1892,24 @@ being manipulated.</p>
    <p>To instruct a Solid Storage Server to redirect or delete a resource,
 you must fetch, change and upload the correct <a href="https://solidproject.org/TR/protocol#auxiliary-resources-description-resource">Auxiliary Description 
 Resource</a>.</p>
-   <p>The correct description resource is the one returned in the LINK header
+   <p>The correct description resource is the one returned in the <code>Link</code> header
 on a HTTP request of the parent container that contains the resource
 you want to redirect or delete.</p>
-   <div class="example" id="example-a210d23a">
-    <a class="self-link" href="#example-a210d23a"></a> For example, to redirect this resource: 
+   <div class="example" id="example-2678983a">
+    <a class="self-link" href="#example-2678983a"></a> For example, to redirect this resource: 
 <pre>https://www.example.com/container/resource.html
 </pre>
     You must do a HTTP request, e.g. HEAD or GET, on the container: 
 <pre>HEAD https://www.example.com/container/
 </pre>
-    This will return response headers, among them this LINK header: 
+    This will return response headers, among them this <code>Link</code> header: 
 <pre>Link: &lt;https://www.example.com/container/.meta>; rel="describes"
 </pre>
     So you can redirect the original resource.html by adding link-metadata
 predicates to the resource at <code>https://www.example.com/container/.meta</code>. 
    </div>
    <p class="note" role="note"><span>Note:</span> In the remainder of this specification wherever you see the <code>.meta</code> filename referenced, it is assumed that this is the filename and URL returned 
-in the LINK header in an earlier HTTP request to the parent folder of the 
+in the <code>Link</code> header in an earlier HTTP request to the parent folder of the 
 resource being manipulated, according to the rules outlined above.</p>
    <h2 class="heading settled" data-level="4" id="lm-predicates"><span class="secno">4. </span><span class="content">Link-Metadata predicates</span><a class="self-link" href="#lm-predicates"></a></h2>
    <h3 class="heading settled" data-level="4.1" id="lm-redirectPermanent"><span class="secno">4.1. </span><span class="content">lm:redirectPermanent</span><a class="self-link" href="#lm-redirectPermanent"></a></h3>

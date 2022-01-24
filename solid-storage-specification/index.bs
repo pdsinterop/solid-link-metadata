@@ -32,7 +32,7 @@ send redirect (HTTP 307 or 308 status) or deleted (HTTP 404 or 410) responses
 to requests for specific files, by adding link metadata triples to the [description resource](https://solidproject.org/TR/protocol#auxiliary-resources-description-resource).
 
 In the remainder of this specification wherever you see the `.meta` filename referenced, it is assumed that this
-is the filename and URL returned in the LINK header in an earlier HTTP request to the parent folder of the resource
+is the filename and URL returned in the `Link` header in an earlier HTTP request to the parent folder of the resource
 being manipulated.
 
 # Definitions # {#definitions}
@@ -48,7 +48,7 @@ To instruct a Solid Storage Server to redirect or delete a resource,
 you must fetch, change and upload the correct [Auxiliary Description 
 Resource](https://solidproject.org/TR/protocol#auxiliary-resources-description-resource).
 
-The correct description resource is the one returned in the LINK header
+The correct description resource is the one returned in the `Link` header
 on a HTTP request of the parent container that contains the resource
 you want to redirect or delete.
 
@@ -61,7 +61,7 @@ You must do a HTTP request, e.g. HEAD or GET, on the container:
 ```
 HEAD https://www.example.com/container/
 ```
-This will return response headers, among them this LINK header:
+This will return response headers, among them this `Link` header:
 ```
 Link: <https://www.example.com/container/.meta>; rel="describes"
 ```
@@ -71,7 +71,7 @@ predicates to the resource at `https://www.example.com/container/.meta`.
 
 Note: In the remainder of this specification wherever you see the `.meta` 
 filename referenced, it is assumed that this is the filename and URL returned 
-in the LINK header in an earlier HTTP request to the parent folder of the 
+in the `Link` header in an earlier HTTP request to the parent folder of the 
 resource being manipulated, according to the rules outlined above.
 
 
